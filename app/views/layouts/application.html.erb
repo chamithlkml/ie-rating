@@ -21,16 +21,37 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link" href="#">Login</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Register</a>
-            </li>
+            <% if user_signed_in? %>
+              <li class="nav-item">
+                <%= link_to "Sign out", destroy_user_session_path, method: :delete, class: "nav-link" %>
+              </li>
+            <% else %>
+              <li class="nav-item">
+                <a class="nav-link" href="<%= new_user_session_path %>">Sign in</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="<%= new_user_registration_path %>">Sign up</a>
+              </li>
+            <% end %>
           </ul>
         </div>
       </div>
     </nav>
+    <% if notice %>
+      <div class="container mt-3">
+        <div class="alert alert-primary alert-dismissible fade show" role="alert">
+          <strong>Attention!</strong> <%= notice %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      </div>
+    <% elsif alert %>
+      <div class="container mt-3">
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          <strong>Attention!</strong> <%= alert %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      </div>
+    <% end %>
     <%= yield %>
   </body>
 </html>
