@@ -21,9 +21,21 @@ describe IeStatement do
   end
   # Testing the association
   describe 'Associations' do
-    it 'belongs to users' do
+    it 'belongs to user' do
       relation = IeStatement.reflect_on_association(:user)
       expect(relation.macro).to eq :belongs_to
+    end
+    it 'has_many incomes' do
+      relation = IeStatement.reflect_on_association(:incomes)
+      expect(relation.macro).to eq :has_many
+    end
+    it 'has_many expenditures' do
+      relation = IeStatement.reflect_on_association(:expenditures)
+      expect(relation.macro).to eq :has_many
+    end
+    it 'has_many debt_payments' do
+      relation = IeStatement.reflect_on_association(:debt_payments)
+      expect(relation.macro).to eq :has_many
     end
   end
 end
