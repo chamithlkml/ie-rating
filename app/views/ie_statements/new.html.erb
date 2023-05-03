@@ -1,1 +1,21 @@
-<h1>Create new IE Statement</h1>
+<div class="container mt-2">
+  <div class="row text-center">
+    <div class="col-md-12">
+      <h3>Let's start building your Income/Expenditure Statement</h3>
+    </div>
+  </div>
+  <div class="row mt-2">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+      <%= form_with model: @ie_statement, html: { class: "needs-validation", novalidate: true }  do |f| %>
+        <div class="mb-3">
+          <%= f.label 'Statement Name' %>
+          <%= f.text_field :name, class: 'form-control', required: true %>
+        </div>
+        
+        <%= f.submit 'Submit', class: 'btn btn-primary' %>
+      <% end %>
+    </div>
+    <div class="col-md-4"></div>
+  </div>
+</div>

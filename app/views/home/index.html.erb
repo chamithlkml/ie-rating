@@ -1,9 +1,203 @@
-<div class="container text-center">
-  <div class="row">
-    <div class="col">
-      <% if user_signed_in? %>
-        <%= javascript_include_tag 'home' %>
-      <% end %>
+
+<% if user_signed_in? %>
+  <div class="row mt-1">
+      <div class="col-md-2">
+        <div class="row">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addIeStatementModal">
+              Add IE Statement
+            </button>
+        </div>
+        <div id="" class="row mt-1">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEntityModal">
+              Add an income
+            </button>
+        </div>
+      </div>
+      <div class="col-md-10">
+        
+      </div>
+  </div>
+  <!-- Add IE Statement Modal -->
+  <div class="modal fade" id="addIeStatementModal" tabindex="-1" aria-labelledby="Add IE Statement" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Add Income/Expenditure Statement</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="addIEStatementForm" class="row needs-validation" novalidate>
+            <div class="col-md-12">
+              <label for="ie_statement[name]" class="form-label" aria-describedby="Name of the IE statement">Name</label>
+              <input type="text" name="ie_statement[name]" class="form-control" id="statementName" aria-describedby="Enter a name for Income/Expenditure statement" required>
+              <div class="invalid-feedback">
+                Please enter a name for the IE statement
+              </div>
+            </div>
+            <div class="row mt-3 mb-1">
+              <div class="col-md-9">
+                <label class="form-label">Income</label>
+              </div>
+              <div class="col-md-3">
+                <div class="row">
+                  <div class="col-md-12">
+                    <button type="button" class="btn btn-outline-secondary" id="addMoreIncome">Add income</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="incomeFieldsContainer">
+              <div class="row mt-1">
+                <div class="col-md-8">
+                  <input type="text" name="income[description][]" class="form-control" placeholder="Description" aria-describedby="Description of the income" required>
+                  <div class="invalid-feedback">
+                    Please enter a description for the income
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <input type="number" name="income[amount][]" class="form-control" placeholder="Amount" aria-describedby="Income amount" required>
+                  <div class="invalid-feedback">
+                    Please enter the amount of the income
+                  </div>
+                </div>
+                <div class="col-md-1">
+                  <button type="button" class="btn-close field-close" aria-label="Close"></button>
+                </div>
+              </div>
+            </div>
+            <div class="row mt-3 mb-1">
+              <div class="col-md-9">
+                <label class="form-label">Expenditures</label>
+              </div>
+              <div class="col-md-3">
+                <div class="row">
+                  <div class="col-md-12">
+                    <button type="button" class="btn btn-outline-secondary" id="addMoreExpenditure">Add expenditure</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="expenditureFieldsContainer">
+              <div class="row mt-1">
+                <div class="col-md-8">
+                  <input type="text" name="expenditure[description][]" class="form-control" placeholder="Description" aria-describedby="Description of the expenditure" required>
+                  <div class="invalid-feedback">
+                    Please enter a description for the expenditure
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <input type="number" name="expenditure[amount][]" class="form-control" placeholder="Amount" aria-describedby="Expenditure amount" required>
+                  <div class="invalid-feedback">
+                    Please enter the amount of the expenditure
+                  </div>
+                </div>
+                <div class="col-md-1">
+                  <button type="button" class="btn-close field-close" aria-label="Close"></button>
+                </div>
+              </div>
+            </div>
+            <div class="row mt-3 mb-1">
+              <div class="col-md-9">
+                <label class="form-label">Debt Payments</label>
+              </div>
+              <div class="col-md-3">
+                <div class="row">
+                  <div class="col-md-12">
+                    <button type="button" class="btn btn-outline-secondary" id="addMoreDebtPayment">Add debt payment</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="debtPaymentFieldsContainer">
+              <div class="row mt-1">
+                <div class="col-md-8">
+                  <input type="text" name="debt_payment[description][]" class="form-control" placeholder="Description" aria-describedby="Description of the debt payment" required>
+                  <div class="invalid-feedback">
+                    Please enter a description for the debt payment
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <input type="number" name="debt_payment[amount][]" class="form-control" placeholder="Amount" aria-describedby="Debt payment amount" required>
+                  <div class="invalid-feedback">
+                    Please enter the amount of the debt payment
+                  </div>
+                </div>
+                <div class="col-md-1">
+                  <button type="button" class="btn-close field-close" aria-label="Close"></button>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12 mt-2">
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   </div>
-</div>
+
+  <!-- Income field's HTML content -->
+  <div class="d-none" id="incomeField">
+    <div class="row mt-1">
+      <div class="col-md-8">
+        <input type="text" name="income[description][]" class="form-control" placeholder="Description" aria-describedby="Description of the income" required>
+        <div class="invalid-feedback">
+          Please enter a description for the income
+        </div>
+      </div>
+      <div class="col-md-3">
+        <input type="number" name="income[amount][]" class="form-control" placeholder="Amount" aria-describedby="Income amount" required>
+        <div class="invalid-feedback">
+          Please enter the amount of the income
+        </div>
+      </div>
+      <div class="col-md-1">
+        <button type="button" class="btn-close field-close" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Expenditure field's HTML content -->
+  <div class="d-none" id="expenditureField">
+    <div class="row mt-1">
+      <div class="col-md-8">
+        <input type="text" name="expenditure[description][]" class="form-control" placeholder="Description" aria-describedby="Description of the expenditure" required>
+        <div class="invalid-feedback">
+          Please enter a description for the expenditure
+        </div>
+      </div>
+      <div class="col-md-3">
+        <input type="number" name="expenditure[amount][]" class="form-control" placeholder="Amount" aria-describedby="Expenditure amount" required>
+        <div class="invalid-feedback">
+          Please enter the amount of the expenditure
+        </div>
+      </div>
+      <div class="col-md-1">
+        <button type="button" class="btn-close field-close" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Debt payment field's HTML content -->
+  <div class="d-none" id="debtPaymentField">
+    <div class="row mt-1">
+      <div class="col-md-8">
+        <input type="text" name="debt_payment[description][]" class="form-control" placeholder="Description" aria-describedby="Description of the debt payment" required>
+        <div class="invalid-feedback">
+          Please enter a description for the debt payment
+        </div>
+      </div>
+      <div class="col-md-3">
+        <input type="number" name="debt_payment[amount][]" class="form-control" placeholder="Amount" aria-describedby="Debt payment amount" required>
+        <div class="invalid-feedback">
+          Please enter the amount of the debt payment
+        </div>
+      </div>
+      <div class="col-md-1">
+        <button type="button" class="btn-close field-close" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+
+  <%= javascript_include_tag 'home' %>
+<% end %>
