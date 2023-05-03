@@ -9,6 +9,7 @@ class IeStatementsController < ApplicationController
     begin
 
       ActiveRecord::Base.transaction do
+
         @ie_statement = IeStatement.new(ie_statement_params)
         @ie_statement.user = current_user
 
