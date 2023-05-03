@@ -8,4 +8,5 @@ class StatementEntry < ApplicationRecord
   belongs_to :ie_statement
 
   enum :entry_type, { income: 0, expenditure: 1, debt_payment: 2 }, suffix: true, default: :income
+
 end

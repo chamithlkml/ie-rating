@@ -48,7 +48,13 @@ class IeStatementsController < ApplicationController
 
       render json: {
         success: true,
-        message: 'Your Income/Expenditure statement is added!'
+        message: 'Your Income/Expenditure statement is added!',
+        disposable_income: disposable_income,
+        ie_statement: @ie_statement,
+        income_entries: @ie_statement.statement_entries.where(entry_type: :income),
+        expenditure_entries: @ie_statement.statement_entries.where(entry_type: :expenditure),
+        debt_payment_entries: @ie_statement.statement_entries.where(entry_type: :debt_payment),
+        ie_rating: calculate_ie_rating
       }
 
     rescue Exception => e
@@ -65,4 +71,38 @@ class IeStatementsController < ApplicationController
     params[:ie_statement].permit(:name)
   end
 
+  def total_expenditure
+    expenditure = @ie_statement.statement_entries.where(entry_type: :expenditure).sum(:amount)
+    debt_payments = @ie_statement.statement_entries.where(entry_type: :debt_payment).sum(:amount)
+    expenditure + debt_payments
+  end
+
+  def total_income
+    @ie_statement.statement_entries.where(entry_type: :income).sum(:amount)
+  end
+
+  def disposable_income
+    total_income - total_expenditure
+  end
+
+  def calculate_ie_rating
+    income = total_income
+    return 'Income cannot be 0' if income.zero?
+
+    ie_ratio = (total_expenditure / total_income.to_f) * 100
+
+    ie_rating = ''
+
+    if ie_ratio < 10
+      ie_rating = 'A'
+    elsif ie_ratio >= 10 && ie_ratio < 30
+      ie_rating = 'B'
+    elsif ie_ratio >= 30 && ie_ratio < 50
+      ie_rating = 'C'
+    else
+      ie_rating = 'D'
+    end
+
+    ie_rating
+  end
 end

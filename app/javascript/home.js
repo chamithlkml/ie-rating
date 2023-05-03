@@ -40,6 +40,28 @@ $( document ).ready(function() {
     $('#alertContainer').html(messageHtml)
   }
 
+  let getEntryHtml = function(name, entries){
+    let entryHtml = ''
+    entryHtml +=  '<span>'+name+'</span>'+
+                  '<table class="table">'+
+                  '<thead>'+
+                  '<tr>'+
+                  '<th scope="col">Description</th>'+
+                  '<th scope="col">Amount</th>'+
+                  '</tr>'+
+                  '</thead>'+
+                  '<tbody>';
+
+    entries.forEach(function(entry){
+      entryHtml += '<tr><td>'+entry.description+'</td><td>'+entry.amount+'</td></tr>'
+    })
+
+    entryHtml +=  '</tbody>'+
+                    '</table>'
+
+    return entryHtml
+  }
+
   const addIEStatementModal = document.getElementById('addIeStatementModal')
   
   addIEStatementModal.addEventListener('shown.bs.modal', event => {
@@ -57,8 +79,32 @@ $( document ).ready(function() {
 
           if(response['success']){
             showMessage('notice', 'IE Statement created.')
+
+            let homeContent = '';
+            homeContent +=  '<div class="row">'+
+                            ' <div class="col-md-12">'+
+                            '   <h3>'+response.ie_statement.name+'</h3>'
+
+            homeContent += getEntryHtml('Income', response.income_entries)
+            homeContent += getEntryHtml('Expenditure', response.expenditure_entries)
+            homeContent += getEntryHtml('Debt Payments', response.debt_payment_entries)
+
+            homeContent += '</div>'+
+                           '</div>'
+
+            homeContent += '<div class="row mt-3">'+
+                           ' <div class="col-md-6">Disposable income:</div>'+
+                           ' <div class="col-md-6">'+response.disposable_income+'</div>'+
+                           '</div>'
+            homeContent += '<div class="row mt-3">'+
+                           ' <div class="col-md-6">IE Rating:</div>'+
+                           ' <div class="col-md-6">'+response.ie_rating+'</div>'+
+                           '</div>'
+
+            $('#homeContent').html(homeContent)
+
           }else{
-            showMessage('alert', response['message'])
+            showMessage('alert', response.message)
           }
 
         }).fail(function(jqXHR, textStatus, errorThrown){
