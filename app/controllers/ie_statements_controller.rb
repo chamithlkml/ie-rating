@@ -65,6 +65,10 @@ class IeStatementsController < ApplicationController
     end
   end
 
+  def index
+    
+  end
+
   private
 
   def ie_statement_params
