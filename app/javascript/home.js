@@ -118,7 +118,6 @@ $( document ).ready(function() {
           data: $(this).serialize(),
           method: 'POST'
         }).done(function(response){
-          console.log(response)
           $('#addIeStatementModal').modal('hide')
           $('#addIEStatementForm').trigger('reset')
 
@@ -162,6 +161,23 @@ $( document ).ready(function() {
     }).done(function(response){
       if(response.success){
         let homeContent = getStatementListHtml(response.ie_statements)
+        $('#homeContent').html(homeContent)
+      }else{
+        showMessage('alert', response.message)
+      }
+    }).fail(function(jqXHR, textStatus, errorThrown){
+      showMessage('alert', errorThrown)
+    })
+  })
+
+  $(document).on('click', '.show-statement', function(){
+    $.ajax({
+      url: '/ie_statements/'+$(this).attr('data-statement-id'),
+      method: 'GET'
+    }).done(function(response){
+      console.log(response)
+      if(response.success){
+        let homeContent = getStatementHtml(response)
         $('#homeContent').html(homeContent)
       }else{
         showMessage('alert', response.message)

@@ -57,7 +57,7 @@ class IeStatementsController < ApplicationController
         ie_rating: calculate_ie_rating
       }
 
-    rescue Exception => e
+    rescue StandardError => e
       render json: {
         sucess: false,
         message: e.message
@@ -71,13 +71,37 @@ class IeStatementsController < ApplicationController
         success: true,
         ie_statements: current_user.ie_statements
       }
-    rescue Exception => e
+    rescue StandardError => e
       render json: {
         sucess: false,
         message: e.message
       }
     end
-    
+  end
+
+  def show
+    begin
+      found_ie_statement_id = current_user.ie_statements.where(id: params[:id]).first.try(:id)
+
+      raise 'Statement not found' if found_ie_statement_id.nil?
+
+      @ie_statement = IeStatement.find(found_ie_statement_id)
+
+      render json: {
+        success: true,
+        disposable_income: disposable_income,
+        ie_statement: @ie_statement,
+        income_entries: @ie_statement.statement_entries.where(entry_type: :income),
+        expenditure_entries: @ie_statement.statement_entries.where(entry_type: :expenditure),
+        debt_payment_entries: @ie_statement.statement_entries.where(entry_type: :debt_payment),
+        ie_rating: calculate_ie_rating
+      }
+    rescue StandardError => e
+      render json: {
+        sucess: false,
+        message: e.message
+      }
+    end
   end
 
   private
