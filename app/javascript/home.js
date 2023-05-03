@@ -113,6 +113,8 @@ $( document ).ready(function() {
     $(document).on('submit', '#addIEStatementForm', function(event){
       event.preventDefault()
 
+        document.getElementById('submitAddStatement').disabled = true;
+
         $.ajax({
           url: '/ie_statements',
           data: $(this).serialize(),
@@ -120,6 +122,7 @@ $( document ).ready(function() {
         }).done(function(response){
           $('#addIeStatementModal').modal('hide')
           $('#addIEStatementForm').trigger('reset')
+          document.getElementById('submitAddStatement').disabled = false;
 
           if(response.success){
             showMessage('notice', 'IE Statement created.')
@@ -133,6 +136,7 @@ $( document ).ready(function() {
           showMessage('alert', errorThrown)
           $('#addIeStatementModal').modal('hide')
           $('#addIEStatementForm').trigger('reset')
+          document.getElementById('submitAddStatement').disabled = false;
         })
       
     })
