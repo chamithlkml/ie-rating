@@ -10,29 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_02_173015) do
-  create_table "debt_payments", force: :cascade do |t|
-    t.string "description", default: "", null: false
-    t.integer "amount", default: 0
-    t.integer "ie_statement_id"
-    t.datetime "discarded_at"
-    t.datetime "datetime"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["ie_statement_id"], name: "index_debt_payments_on_ie_statement_id"
-  end
-
-  create_table "expenditures", force: :cascade do |t|
-    t.string "description", default: "", null: false
-    t.integer "amount", default: 0
-    t.integer "ie_statement_id"
-    t.datetime "discarded_at"
-    t.datetime "datetime"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["ie_statement_id"], name: "index_expenditures_on_ie_statement_id"
-  end
-
+ActiveRecord::Schema[7.0].define(version: 2023_05_03_044847) do
   create_table "ie_statements", force: :cascade do |t|
     t.string "name", default: "", null: false
     t.integer "user_id"
@@ -43,15 +21,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_02_173015) do
     t.index ["user_id"], name: "index_ie_statements_on_user_id"
   end
 
-  create_table "incomes", force: :cascade do |t|
+  create_table "statement_entries", force: :cascade do |t|
     t.string "description", default: "", null: false
     t.integer "amount", default: 0
     t.integer "ie_statement_id"
+    t.integer "entry_type", default: 0, null: false
     t.datetime "discarded_at"
     t.datetime "datetime"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["ie_statement_id"], name: "index_incomes_on_ie_statement_id"
+    t.index ["entry_type"], name: "index_statement_entries_on_entry_type"
+    t.index ["ie_statement_id"], name: "index_statement_entries_on_ie_statement_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -67,8 +47,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_02_173015) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "debt_payments", "ie_statements"
-  add_foreign_key "expenditures", "ie_statements"
   add_foreign_key "ie_statements", "users"
-  add_foreign_key "incomes", "ie_statements"
+  add_foreign_key "statement_entries", "ie_statements"
 end
