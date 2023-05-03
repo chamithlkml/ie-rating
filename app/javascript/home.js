@@ -87,6 +87,26 @@ $( document ).ready(function() {
     return homeContent
   }
 
+  let getStatementListHtml = function(statements){
+    let listHtml = '';
+    listHtml += '<h4>Previous Statements</h4>'+
+                '<table class="table">'
+    statements.forEach(function(statement){
+      listHtml += '<tr>'+
+                  ' <td>'+statement.name+'</td>'+
+                  ' <td>'+
+                  '   <button type="button" data-statement-id="'+statement.id+'" class="btn btn-primary show-statement">'+
+                  '     Show'
+                  '   </button>'
+                  ' </td>'
+                  '</tr>'
+    })
+
+    listHtml += '</table>'
+
+    return listHtml
+  }
+
   const addIEStatementModal = document.getElementById('addIeStatementModal')
   
   addIEStatementModal.addEventListener('shown.bs.modal', event => {
@@ -102,7 +122,7 @@ $( document ).ready(function() {
           $('#addIeStatementModal').modal('hide')
           $('#addIEStatementForm').trigger('reset')
 
-          if(response['success']){
+          if(response.success){
             showMessage('notice', 'IE Statement created.')
             let homeContent = getStatementHtml(response)
             $('#homeContent').html(homeContent)
@@ -111,7 +131,6 @@ $( document ).ready(function() {
           }
 
         }).fail(function(jqXHR, textStatus, errorThrown){
-          console.log(errorThrown);
           showMessage('alert', errorThrown)
           $('#addIeStatementModal').modal('hide')
           $('#addIEStatementForm').trigger('reset')
@@ -135,4 +154,21 @@ $( document ).ready(function() {
   $(document).on('click', '.field-close', function(){
     $(this).parent().parent().empty()
   })
+
+  $(document).on('click', '#showStatements', function(){
+    $.ajax({
+      url: '/ie_statements',
+      method: 'GET'
+    }).done(function(response){
+      if(response.success){
+        let homeContent = getStatementListHtml(response.ie_statements)
+        $('#homeContent').html(homeContent)
+      }else{
+        showMessage('alert', response.message)
+      }
+    }).fail(function(jqXHR, textStatus, errorThrown){
+      showMessage('alert', errorThrown)
+    })
+  })
+
 });

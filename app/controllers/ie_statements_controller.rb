@@ -66,6 +66,17 @@ class IeStatementsController < ApplicationController
   end
 
   def index
+    begin
+      render json: {
+        success: true,
+        ie_statements: current_user.ie_statements
+      }
+    rescue Exception => e
+      render json: {
+        sucess: false,
+        message: e.message
+      }
+    end
     
   end
 
