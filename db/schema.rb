@@ -10,7 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_03_044847) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_10_163123) do
+  create_table "employees", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "ie_statements", force: :cascade do |t|
     t.string "name", default: "", null: false
     t.integer "user_id"
@@ -19,6 +25,25 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_03_044847) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_ie_statements_on_user_id"
+  end
+
+  create_table "pictures", force: :cascade do |t|
+    t.string "path"
+    t.string "imageable_type", null: false
+    t.integer "imageable_id", null: false
+    t.integer "employees_id"
+    t.integer "products_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["employees_id"], name: "index_pictures_on_employees_id"
+    t.index ["imageable_type", "imageable_id"], name: "index_pictures_on_imageable"
+    t.index ["products_id"], name: "index_pictures_on_products_id"
+  end
+
+  create_table "products", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "statement_entries", force: :cascade do |t|
@@ -48,5 +73,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_03_044847) do
   end
 
   add_foreign_key "ie_statements", "users"
+  add_foreign_key "pictures", "employees", column: "employees_id"
+  add_foreign_key "pictures", "products", column: "products_id"
   add_foreign_key "statement_entries", "ie_statements"
 end
