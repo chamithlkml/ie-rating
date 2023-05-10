@@ -24,7 +24,7 @@ $( document ).ready(function() {
     if(message_type == 'notice'){
       messageHtml = '<div class="container mt-3">'+
                     ' <div class="alert alert-primary alert-dismissible fade show" role="alert">'+
-                    '   <strong>Attention!</strong>'+message+
+                    '   <strong>Attention!</strong> '+message+
                     '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>'+
                     ' </div>'+
                     '</div>'
@@ -107,6 +107,20 @@ $( document ).ready(function() {
     return listHtml
   }
 
+  let resetAddIEStatementForm = function(){
+    const fieldContainers = ['incomeFieldsContainer', 'expenditureFieldsContainer', 'debtPaymentFieldsContainer']
+    
+    $('#addIeStatementModal').modal('hide')
+    $('#addIEStatementForm').trigger('reset')
+    $('#addIEStatementForm').removeClass('was-validated')
+
+    fieldContainers.forEach(function(fieldContainer){
+      $('#'+fieldContainer).html('')
+    })
+
+    document.getElementById('submitAddStatement').disabled = false;
+  }
+
   const addIEStatementModal = document.getElementById('addIeStatementModal')
   
   addIEStatementModal.addEventListener('shown.bs.modal', event => {
@@ -120,23 +134,19 @@ $( document ).ready(function() {
           data: $(this).serialize(),
           method: 'POST'
         }).done(function(response){
-          $('#addIeStatementModal').modal('hide')
-          $('#addIEStatementForm').trigger('reset')
-          document.getElementById('submitAddStatement').disabled = false;
+
+          resetAddIEStatementForm()
 
           if(response.success){
             showMessage('notice', 'IE Statement created.')
-            let homeContent = getStatementHtml(response)
-            $('#homeContent').html(homeContent)
+            $('#homeContent').html(getStatementHtml(response))
           }else{
             showMessage('alert', response.message)
           }
 
         }).fail(function(jqXHR, textStatus, errorThrown){
           showMessage('alert', errorThrown)
-          $('#addIeStatementModal').modal('hide')
-          $('#addIEStatementForm').trigger('reset')
-          document.getElementById('submitAddStatement').disabled = false;
+          resetAddIEStatementForm()
         })
       
     })

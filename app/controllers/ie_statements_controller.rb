@@ -9,7 +9,9 @@ class IeStatementsController < ApplicationController
     ie_statement = IeStatement.new(ie_statement_params)
     ie_statement.user = current_user
     ie_statement.save!
-    save_statement_entries(ie_statement)
+    save_statement_entries(ie_statement, :income)
+    save_statement_entries(ie_statement, :expenditure)
+    save_statement_entries(ie_statement, :debt_payment)
     render json: json_response(ie_statement, 'Your Income/Expenditure statement is added!')
   end
 
@@ -47,14 +49,13 @@ class IeStatementsController < ApplicationController
     params[:ie_statement].permit(:name)
   end
 
-  def save_statement_entries(ie_statement)
-    %i[income expenditure debt_payment].each do |entry_type|
+  def save_statement_entries(ie_statement, entry_type)
+    # %i[income expenditure debt_payment].each do |entry_type|
       params[entry_type][:description].each_with_index do |description, index|
-        statement_entry = StatementEntry.new(
+        StatementEntry.create!(
           description:, amount: params[entry_type][:amount][index], entry_type:, ie_statement:
         )
-        statement_entry.save!
       end
-    end
+    # end
   end
 end
